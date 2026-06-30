@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- App Sandbox is enabled in the project; these exceptions let the receiver
+	     act as a LAN server/client and capture the screen. -->
+	<key>com.apple.security.app-sandbox</key>
+	<true/>
+	<key>com.apple.security.network.server</key>
+	<true/>
+	<key>com.apple.security.network.client</key>
+	<true/>
+	<!-- Required once the DriverKit virtual-HID System Extension is added.
+	     Needs the matching managed capability from your Apple Developer account. -->
+	<key>com.apple.developer.system-extension.install</key>
+	<true/>
+</dict>
+</plist>
