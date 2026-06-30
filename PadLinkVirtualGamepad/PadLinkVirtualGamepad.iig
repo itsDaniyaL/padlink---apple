@@ -1,0 +1,36 @@
+//
+//  PadLinkVirtualGamepad.iig
+//  DriverKit virtual HID gamepad — interface definition (IIG).
+//
+//  Subclasses IOUserHIDDevice to publish a system-wide Xbox-style gamepad.
+//  The host app delivers input through PadLinkUserClient (selector 0), which
+//  calls postInput() here to emit a HID input report.
+//
+
+#ifndef PadLinkVirtualGamepad_h
+#define PadLinkVirtualGamepad_h
+
+#include <HIDDriverKit/IOUserHIDDevice.iig>
+
+class PadLinkVirtualGamepad: public IOUserHIDDevice
+{
+public:
+    virtual bool init() override;
+    virtual void free() override;
+
+    virtual kern_return_t Start(IOService * provider) override;
+    virtual kern_return_t Stop(IOService * provider) override;
+
+    // Create our user client (PadLinkUserClient) when the app calls IOServiceOpen.
+    virtual kern_return_t NewUserClient(uint32_t type, IOUserClient ** userClient) override;
+
+    // IOUserHIDDevice required overrides.
+    virtual OSDictionary * newDeviceDescription(void) override LOCALONLY;
+    virtual OSData * newReportDescriptor(void) override LOCALONLY;
+
+    // Translate the host app's 16-byte submit struct into a HID input report
+    // and post it. Called from PadLinkUserClient::ExternalMethod (selector 0).
+    virtual kern_return_t postInput(const void * bytes, size_t length) LOCALONLY;
+};
+
+#endif /* PadLinkVirtualGamepad_h */

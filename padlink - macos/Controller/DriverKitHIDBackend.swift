@@ -52,22 +52,19 @@ final class DriverKitHIDBackend: VirtualControllerBackend {
 
     func submit(_ report: HIDGamepadReport) {
         guard connection != 0 else { return }
-        // Pack the report into the byte layout the dext descriptor expects.
-        var bytes = [UInt8](repeating: 0, count: 14)
-        bytes[0] = UInt8(report.buttons & 0xFF)
-        bytes[1] = UInt8(report.buttons >> 8)
+        // 16-byte submit struct the dext's PadLinkUserClient parses (little-endian):
+        //   u16 buttons | u8 dpad | u8 pad | i16 lx,ly,rx,ry | u16 lt | u16 rt
+        var bytes = [UInt8](repeating: 0, count: 16)
+        func putU16(_ v: UInt16, _ o: Int) { bytes[o] = UInt8(v & 0xFF); bytes[o+1] = UInt8(v >> 8) }
+        func putI16(_ v: Int16, _ o: Int) { putU16(UInt16(bitPattern: v), o) }
+
+        putU16(report.buttons, 0)
         bytes[2] = report.hat
-        func putI16(_ v: Int16, _ o: Int) {
-            let u = UInt16(bitPattern: v)
-            bytes[o] = UInt8(u & 0xFF); bytes[o+1] = UInt8(u >> 8)
-        }
-        func putU16(_ v: UInt16, _ o: Int) {
-            bytes[o] = UInt8(v & 0xFF); bytes[o+1] = UInt8(v >> 8)
-        }
-        putI16(report.leftX, 3); putI16(report.leftY, 5)
-        putI16(report.rightX, 7); putI16(report.rightY, 9)
-        putU16(report.leftTrigger, 11)
-        // (rightTrigger packed in dext-specific extension byte; descriptor dependent)
+        bytes[3] = 0
+        putI16(report.leftX, 4); putI16(report.leftY, 6)
+        putI16(report.rightX, 8); putI16(report.rightY, 10)
+        putU16(report.leftTrigger, 12)
+        putU16(report.rightTrigger, 14)
 
         bytes.withUnsafeBufferPointer { buf in
             _ = IOConnectCallStructMethod(

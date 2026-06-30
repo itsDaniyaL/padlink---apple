@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundleIdentifier</key>
+    <string>com.stackfinity.padlink.macos.PadLinkVirtualGamepad</string>
+    <key>CFBundleName</key>
+    <string>PadLinkVirtualGamepad</string>
+    <key>CFBundlePackageType</key>
+    <string>DEXT</string>
+    <key>OSBundleUsageDescription</key>
+    <string>Presents your phone as a virtual game controller.</string>
+
+    <key>IOKitPersonalities</key>
+    <dict>
+        <key>PadLinkVirtualGamepad</key>
+        <dict>
+            <key>CFBundleIdentifierKernel</key>
+            <string>com.apple.kpi.iokit</string>
+            <key>CFBundleIdentifier</key>
+            <string>com.stackfinity.padlink.macos.PadLinkVirtualGamepad</string>
+            <key>IOUserClass</key>
+            <string>PadLinkVirtualGamepad</string>
+            <key>IOUserServerName</key>
+            <string>com.stackfinity.padlink.macos.PadLinkVirtualGamepad</string>
+            <!-- Virtual device: match the always-present IOUserResources provider
+                 so the dext loads without backing hardware. -->
+            <key>IOProviderClass</key>
+            <string>IOUserResources</string>
+            <key>IOResourceMatch</key>
+            <string>IOKit</string>
+            <key>IOMatchCategory</key>
+            <string>com.stackfinity.padlink.macos.PadLinkVirtualGamepad</string>
+
+            <!-- Properties used by Create(this, "UserClientProperties", ...). -->
+            <key>UserClientProperties</key>
+            <dict>
+                <key>IOUserClass</key>
+                <string>PadLinkUserClient</string>
+                <key>IOServiceDEXTEntitlements</key>
+                <array>
+                    <string>com.apple.developer.driverkit.userclient-access</string>
+                </array>
+            </dict>
+        </dict>
+    </dict>
+</dict>
+</plist>

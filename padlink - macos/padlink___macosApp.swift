@@ -21,6 +21,7 @@ final class AppModel: ObservableObject {
     let controller: VirtualController
     let screen: ScreenShareController
     let server: ReceiverServer
+    let sysext = SystemExtensionManager()
 
     private var cancellables = Set<AnyCancellable>()
 
@@ -34,7 +35,8 @@ final class AppModel: ObservableObject {
         // These are nested ObservableObjects; SwiftUI only re-renders views bound
         // to AppModel when *AppModel's* objectWillChange fires. Forward each
         // child's change so the dashboard (PIN, status, controller state) updates.
-        for child in [server.objectWillChange, controller.objectWillChange, screen.objectWillChange] {
+        for child in [server.objectWillChange, controller.objectWillChange,
+                      screen.objectWillChange, sysext.objectWillChange] {
             child.sink { [weak self] _ in self?.objectWillChange.send() }
                 .store(in: &cancellables)
         }

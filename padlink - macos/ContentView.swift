@@ -92,6 +92,19 @@ struct DashboardView: View {
                     Text("seq \(s.seq)").font(.caption.monospaced()).foregroundStyle(.secondary)
                 }
             }.padding(6)
+
+            // DriverKit system-extension activation (so games see a real pad).
+            if !model.controller.isConnected || model.controller.backendName.contains("logging") {
+                Divider()
+                HStack {
+                    Text(model.sysext.status).font(.caption).foregroundStyle(.secondary)
+                    Spacer()
+                    Button(model.sysext.isActivating ? "Installing…" : "Enable virtual controller") {
+                        model.sysext.activate()
+                    }
+                    .disabled(model.sysext.isActivating)
+                }.padding(.horizontal, 6).padding(.bottom, 6)
+            }
         }
     }
 

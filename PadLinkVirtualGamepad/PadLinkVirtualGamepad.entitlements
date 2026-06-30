@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <!-- Base DriverKit capability. -->
+    <key>com.apple.developer.driverkit</key>
+    <true/>
+
+    <!-- Create a virtual HID device (the gamepad) + HID transport. -->
+    <key>com.apple.developer.driverkit.family.hid.device</key>
+    <true/>
+    <key>com.apple.developer.driverkit.transport.hid</key>
+    <true/>
+
+    <!-- Only the PadLink host app may open this driver's IOUserClient. -->
+    <key>com.apple.developer.driverkit.userclient-access</key>
+    <array>
+        <string>com.stackfinity.padlink.macos</string>
+    </array>
+</dict>
+</plist>
